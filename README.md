@@ -1,8 +1,10 @@
-# client
+### Build & Deploy a Geocoding Map App With Vue 3, Express & Tailwind CSS
 
-## Project setup
-```
-npm install
+_Documentation by Romi Julianto_
+
+## Installation
+```bash
+- vue create client
 ```
 
 ### Compiles and hot-reloads for development
@@ -20,5 +22,10 @@ npm run build
 npm run lint
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+
+
+### Run Request in PostMan
+[![Run in Postman](https://run.pstmn.io/button.svg)]()
+### Referensi
+- [Build & Deploy a Geocoding Map App With Vue 3, Express & Tailwind CSS](https://www.youtube.com/watch?v=vfqjz-JnfXc)
+
