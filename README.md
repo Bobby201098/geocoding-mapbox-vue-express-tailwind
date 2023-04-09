@@ -5,6 +5,9 @@ _Documentation by Romi Julianto_
 ## Installation
 ```bash
 - vue create client
+- npm install -D tailwindcss postcss autoprefixer
+- npx tailwindcss init -p
+- npm i axios leaflet
 ```
 
 ### Compiles and hot-reloads for development
