@@ -1,10 +1,6 @@
 <template>
-  <div class="home">
-    <h1 class="text-3xl font-bold underline text-red-500">
-      Hello world!
-    </h1>
-    <button class="bg-sky-700 px-4 py-2 text-white hover:bg-sky-800 sm:px-8 sm:py-3">Button</button>
-
+  <div class="h-screen relative">
+    <div id="map" class="h-full z-[1]"></div>
   </div>
 </template>
 
