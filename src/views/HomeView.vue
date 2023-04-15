@@ -42,7 +42,20 @@ export default {
     }
 
     const setCoords = (pos) => {
-      console.log(pos)
+      // stop fecthing coords
+      fetchCoords.value = null;
+
+      // set coords in session storage
+      const setSessionCoords = {
+        lat: pos.coords.latitude,
+        lng: pos.coords.longitude,
+      }
+
+      sessionStorage.setItem("coords", JSON.stringify(setSessionCoords))
+
+      // set ref coords value from sessionStorage
+      coords.value = setSessionCoords
+
     }
 
     const getLocError = (error) => {
