@@ -43,6 +43,12 @@ export default {
 
     // function getGeolocation
     const getGeolocation = () => {
+      // check session storage
+      if (sessionStorage.getItem("coords")) {
+        coords.value = JSON.parse(sessionStorage.getItem("coords"))
+        plotGeolocation(coords.value);
+      }
+
       fetchCoords.value = true;
       navigator.geolocation.getCurrentPosition(setCoords, getLocError);
     };
