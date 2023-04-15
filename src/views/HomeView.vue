@@ -1,5 +1,5 @@
 <template>
-  <div class="h-screen relative">
+  <div class="relative h-screen">
     <div id="map" class="h-full z-[1]"></div>
   </div>
 </template>
@@ -17,13 +17,23 @@ export default {
       map = leaflet.map('map').setView([51.505, -0.09], 13);
 
       // add tile layer leaflet
-      leaflet.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
+      // leaflet.tilelayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      //   maxzoom: 19,
+      // }).addto(map);
+
+      // add tile layer mapbox
+      leaflet.tileLayer(`https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=${process.env.VUE_APP_API_KEY}`, {
+        attribution: '© <a href="https://www.mapbox.com/about/maps/">Mapbox</a> © <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> <strong><a href="https://www.mapbox.com/map-feedback/" target="_blank">Improve this map</a></strong>',
+        tileSize: 512,
+        maxZoom: 18,
+        zoomOffset: -1,
+        id: 'mapbox/streets-v12',
+        accessToken: process.env.VUE_APP_API_KEY,
       }).addTo(map);
     })
 
 
-    
+
   }
 }
 </script>
