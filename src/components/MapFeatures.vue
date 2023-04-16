@@ -3,11 +3,11 @@
     class="absolute z-[2] flex w-full gap-4 bg-transparent px-6 py-8 md:left-[60px] md:top-[40px] md:w-auto md:px-0 md:py-0"
   >
     <!-- Search -->
-    <div class="md:min-w[350px] relative flex-1">
+    <div class="w-[350px] md:min-w[350px] relative flex-1">
       <input
         class="w-full py-3 pr-4 text-sm rounded-md shadow-md pl-9 focus:outline-none"
         type="text"
-        placeholder="Search your address"
+        placeholder="Search your address here"
         v-model="searchQueryUser"
         @input="search"
       />
@@ -19,7 +19,7 @@
       <!-- Search Results -->
       <div class="absolute w-full mt-2">
         <!-- Results -->
-        <div v-if="searchQueryUser" class="overflow-scrool h-[200px] rounded-md bg-white">
+        <div v-if="searchQueryUser" class="overflow-scrool h-[500px] rounded-md bg-white">
           <div
             class="flex px-4 py-2 cursor-pointer gap-x-2 hover:bg-slate-600 hover:text-white"
             v-for="(result, index) in searchData"
@@ -68,7 +68,7 @@ export default {
           const params = new URLSearchParams({
             fuzzyMatch: true,
             lang: "en",
-            limit: 2,
+            limit: 10,
             proximity: props.coords.value
               ? `${props.coords.value.lang},${props.coords.value.lat}`
               : "0,0",
