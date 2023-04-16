@@ -19,12 +19,14 @@
       <!-- Search Results -->
       <div class="absolute w-full mt-2">
         <!-- Results -->
-        <div class="overflow-scrool h-[200px] rounded-md bg-white">
+        <div v-if="searchQueryUser" class="overflow-scrool h-[200px] rounded-md bg-white">
           <div
             class="flex px-4 py-2 cursor-pointer gap-x-2 hover:bg-slate-600 hover:text-white"
+            v-for="(result, index) in searchData"
+            :key="index"
           >
             <i class="fas fa-map-marker-alt"></i>
-            <p class="text-xs">Testing Results</p>
+            <p class="text-xs">{{ result.place_name }}</p>
           </div>
         </div>
       </div>
@@ -66,7 +68,7 @@ export default {
           const params = new URLSearchParams({
             fuzzyMatch: true,
             lang: "en",
-            limit: 10,
+            limit: 2,
             proximity: props.coords.value
               ? `${props.coords.value.lang},${props.coords.value.lat}`
               : "0,0",
