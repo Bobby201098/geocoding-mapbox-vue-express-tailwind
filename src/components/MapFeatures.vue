@@ -1,13 +1,15 @@
 <template>
-    <!-- Title -->
-    <div class="absolute z-[3] w-full gap-4 bg-slate-300 px-2 py-8 md:top-[3px] md:left-[60px] md:w-auto md:px-0 md:py-0 rounded-md">
-        <h1>Geocoding App by romijulianto</h1>
-    </div>
+  <!-- Title -->
   <div
-    class="absolute z-[2] flex w-full gap-4 bg-transparent px-6 py-8 md:left-[60px] md:top-[40px] md:w-auto md:px-0 md:py-0 mt-[-13px]"
+    class="absolute z-[3] w-full gap-4 rounded-md bg-slate-300 px-2 py-8 md:left-[60px] md:top-[3px] md:w-auto md:px-0 md:py-0"
+  >
+    <h1>Geocoding App by romijulianto</h1>
+  </div>
+  <div
+    class="absolute z-[2] mt-[-13px] flex w-full gap-4 bg-transparent px-6 py-8 md:left-[60px] md:top-[40px] md:w-auto md:px-0 md:py-0"
   >
     <!-- Search -->
-    <div class="w-[350px] md:min-w[350px] relative flex-1">
+    <div class="md:min-w[350px] relative w-[350px] flex-1">
       <input
         class="w-full py-3 pr-4 text-sm rounded-md shadow-md pl-9 focus:outline-none"
         type="text"
@@ -23,14 +25,21 @@
       <!-- Search Results -->
       <div class="absolute w-full mt-2">
         <!-- Results -->
-        <div v-if="searchQueryUser" class="overflow-auto scroll-smooth h-[350px] rounded-md bg-white">
-          <div
-            class="flex px-4 py-2 cursor-pointer gap-x-2 hover:bg-slate-600 hover:text-white"
-            v-for="(result, index) in searchData"
-            :key="index"
-          >
-            <i class="fas fa-map-marker-alt"></i>
-            <p class="text-xs">{{ result.place_name }}</p>
+        <div
+          v-if="searchQueryUser"
+          class="h-[350px] overflow-auto scroll-smooth rounded-md bg-white"
+        >
+          <!-- Loading Spinner-->
+          <LoadingSpinner v-if="!searchData" />
+          <div v-if="searchData">
+            <div
+              class="flex px-4 py-2 cursor-pointer gap-x-2 hover:bg-slate-600 hover:text-white"
+              v-for="(result, index) in searchData"
+              :key="index"
+            >
+              <i class="fas fa-map-marker-alt"></i>
+              <p class="text-xs">{{ result.place_name }}</p>
+            </div>
           </div>
         </div>
       </div>
@@ -53,9 +62,11 @@
 <script>
 import { ref } from "vue";
 import axios from "axios";
+import LoadingSpinner from "./LoadingSpinner.vue";
 
 export default {
   props: ["coords", "fetchCoords"],
+  components: [LoadingSpinner],
   setup(props) {
     const searchQueryUser = ref(null);
     const searchData = ref(null);
@@ -63,9 +74,8 @@ export default {
 
     // functioin searchfromUser
     const search = () => {
-
-        // clearTimeOut
-        clearTimeout(queryTimeout.value);
+      // clearTimeOut
+      clearTimeout(queryTimeout.value);
 
       queryTimeout.value = setTimeout(async () => {
         if (searchQueryUser.value !== "") {
@@ -81,7 +91,7 @@ export default {
             `http://localhost:3200/api/search/${searchQueryUser.value}?${params}`
           );
           searchData.value = getData.data.features;
-          console.log(searchData.value)
+          console.log(searchData.value);
         }
       }, 750);
     };
