@@ -1,17 +1,27 @@
 <template>
   <div class="relative h-screen">
-    <GeoErrorModal v-if="geoError" :geoErrorMsg="geoErrorMsg" @closeGeoError="closeGeoError"/>
+    <GeoErrorModal
+      v-if="geoError"
+      :geoErrorMsg="geoErrorMsg"
+      @closeGeoError="closeGeoError"
+    />
+    <MapFeatures
+      @getGeolocation="getGeolocation"
+      :coords="coords"
+      :fetchCoords="fetchCoords"
+    />
     <div id="map" class="z-[1] h-full"></div>
   </div>
 </template>
 
 <script>
 import GeoErrorModal from "@/components/GeoErrorModal.vue";
+import MapFeatures from "@/components/MapFeatures.vue";
 import leaflet from "leaflet";
 import { onMounted, ref } from "vue";
 export default {
   name: "GeocodeView",
-  components: { GeoErrorModal },
+  components: { GeoErrorModal, MapFeatures },
   setup() {
     let map;
     onMounted(() => {
@@ -42,14 +52,14 @@ export default {
     const coords = ref(null);
     const fetchCoords = ref(null);
     const geoMaker = ref(null);
-    const geoError = ref(true);
-    const geoErrorMsg = ref("Testing v-bind model");
+    const geoError = ref(null);
+    const geoErrorMsg = ref(null);
 
     // function getGeolocation
     const getGeolocation = () => {
       // check session storage
       if (sessionStorage.getItem("coords")) {
-        coords.value = JSON.parse(sessionStorage.getItem("coords"))
+        coords.value = JSON.parse(sessionStorage.getItem("coords"));
         plotGeolocation(coords.value);
         return;
       }
@@ -88,7 +98,7 @@ export default {
       const customMarker = leaflet.icon({
         iconUrl: require("../assets/map-marker-blue.svg"),
         iconSize: [40, 40],
-        shadowSize: [50, 64]
+        shadowSize: [50, 64],
       });
 
       // create new marker with coords and custom icon
@@ -97,17 +107,24 @@ export default {
         .addTo(map);
 
       // set map view to current location
-      map.setView([coords.value.lat, coords.value.lng], 15)
+      map.setView([coords.value.lat, coords.value.lng], 15);
     };
-
 
     // function closeGeoError
     const closeGeoError = () => {
       geoError.value = null;
       geoErrorMsg.value = null;
-    }
+    };
 
-    return { coords, geoMaker, getGeolocation, closeGeoError, geoError };
+    return {
+      coords,
+      geoMaker,
+      getGeolocation,
+      closeGeoError,
+      geoError,
+      fetchCoords,
+      geoErrorMsg,
+    };
   },
 };
 </script>
