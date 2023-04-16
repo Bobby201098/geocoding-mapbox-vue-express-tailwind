@@ -1,15 +1,17 @@
 <template>
   <div class="relative h-screen">
+    <GeoErrorModal/>
     <div id="map" class="z-[1] h-full"></div>
   </div>
 </template>
 
 <script>
+import GeoErrorModal from "@/components/GeoErrorModal.vue";
 import leaflet from "leaflet";
 import { onMounted, ref } from "vue";
 export default {
   name: "GeocodeView",
-  components: {},
+  components: { GeoErrorModal },
   setup() {
     let map;
     onMounted(() => {
@@ -40,6 +42,8 @@ export default {
     const coords = ref(null);
     const fetchCoords = ref(null);
     const geoMaker = ref(null);
+    const geoError = ref(null);
+    const geoErrorMsg = ref(null);
 
     // function getGeolocation
     const getGeolocation = () => {
@@ -47,6 +51,7 @@ export default {
       if (sessionStorage.getItem("coords")) {
         coords.value = JSON.parse(sessionStorage.getItem("coords"))
         plotGeolocation(coords.value);
+        return;
       }
 
       fetchCoords.value = true;
@@ -72,7 +77,9 @@ export default {
     };
 
     const getLocError = (error) => {
-      console.log(error);
+      fetchCoords.value = null;
+      geoError.value = true;
+      geoErrorMsg.value = error.message;
     };
 
     // create function plotGeolocation
@@ -80,7 +87,7 @@ export default {
       // create custom marker
       const customMarker = leaflet.icon({
         iconUrl: require("../assets/map-marker-blue.svg"),
-        iconSize: [35, 25],
+        iconSize: [40, 40],
         shadowSize: [50, 64]
       });
 
@@ -90,10 +97,17 @@ export default {
         .addTo(map);
 
       // set map view to current location
-      map.setView([coords.value.lat, coords.value.lng], 10)
+      map.setView([coords.value.lat, coords.value.lng], 15)
     };
 
-    return { coords, geoMaker, getGeolocation };
+
+    // function closeGeoError
+    const closeGeoError = () => {
+      geoError.value = null;
+      geoErrorMsg.value = null;
+    }
+
+    return { coords, geoMaker, getGeolocation, closeGeoError };
   },
 };
 </script>
