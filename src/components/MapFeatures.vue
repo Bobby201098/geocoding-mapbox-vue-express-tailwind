@@ -41,7 +41,32 @@
 </template>
 
 <script>
+import { ref } from 'vue';
+import axios from "axios"
+
 export default {
   props: ['coords', 'fetchCoords'],
+  setup(props) {
+    const searchQueryUser = ref(null);
+    const searchData = ref(null);
+    const queryTimeout = ref(null);
+
+    // functioin searchfromUser
+    const search = () => {
+        queryTimeout.value = setTimeout( async() => {
+            if(searchQueryUser.value !== "") {
+                const params = new URLSearchParams({
+                    fuzzyMatch: true,
+                    lang: 'en',
+                    limit: 10,
+                    proximity: props.coords ? `${props.coords.value.lang},${props.coords.value.lat}` : "0,0"
+                });
+                const getData = await axios.get(`http://localhost:3200/api/search/${searchQueryUser.value}?${params}`)
+            }
+        }, 750);
+    }
+
+    return { searchData, searchQueryUser, queryTimeout }
+  },
 }
 </script>
