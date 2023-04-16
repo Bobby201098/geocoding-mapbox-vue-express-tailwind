@@ -1,6 +1,6 @@
 <template>
   <div class="relative h-screen">
-    <GeoErrorModal/>
+    <GeoErrorModal v-if="geoError" :geoErrorMsg="geoErrorMsg" @closeGeoError="closeGeoError"/>
     <div id="map" class="z-[1] h-full"></div>
   </div>
 </template>
@@ -42,8 +42,8 @@ export default {
     const coords = ref(null);
     const fetchCoords = ref(null);
     const geoMaker = ref(null);
-    const geoError = ref(null);
-    const geoErrorMsg = ref(null);
+    const geoError = ref(true);
+    const geoErrorMsg = ref("Testing v-bind model");
 
     // function getGeolocation
     const getGeolocation = () => {
@@ -107,7 +107,7 @@ export default {
       geoErrorMsg.value = null;
     }
 
-    return { coords, geoMaker, getGeolocation, closeGeoError };
+    return { coords, geoMaker, getGeolocation, closeGeoError, geoError };
   },
 };
 </script>
