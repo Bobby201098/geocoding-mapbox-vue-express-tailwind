@@ -36,6 +36,7 @@
               class="flex px-4 py-2 cursor-pointer gap-x-2 hover:bg-slate-600 hover:text-white"
               v-for="(result, index) in searchData"
               :key="index"
+              @click="selectResultPoint(result)"
             >
               <i class="fas fa-map-marker-alt"></i>
               <p class="text-xs">{{ result.place_name }}</p>
@@ -67,7 +68,7 @@ import LoadingSpinner from "./LoadingSpinner.vue";
 export default {
   props: ["coords", "fetchCoords"],
   components: { LoadingSpinner },
-  setup(props) {
+  setup(props, { emit }) {
     const searchQueryUser = ref(null);
     const searchData = ref(null);
     const queryTimeout = ref(null);
@@ -99,7 +100,11 @@ export default {
       }, 750);
     };
 
-    return { searchData, searchQueryUser, queryTimeout, search };
+    const selectResultPoint = (result) => {
+      emit('plotResult', result.geometry);
+    }
+
+    return { searchData, searchQueryUser, queryTimeout, search, selectResultPoint };
   },
 };
 </script>
