@@ -57,6 +57,13 @@ export default {
 
     // function getGeolocation
     const getGeolocation = () => {
+      if(coords.value){
+        coords.value = null;
+        sessionStorage.removeItem("coords");
+        map.removeLayer(geoMaker.value);
+        return;
+      }
+
       // check session storage
       if (sessionStorage.getItem("coords")) {
         coords.value = JSON.parse(sessionStorage.getItem("coords"));
