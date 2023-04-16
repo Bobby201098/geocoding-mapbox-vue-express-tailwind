@@ -23,7 +23,7 @@
       <!-- Search Results -->
       <div class="absolute w-full mt-2">
         <!-- Results -->
-        <div v-if="searchQueryUser" class="overflow-scrool h-[500px] rounded-md bg-white">
+        <div v-if="searchQueryUser" class="overflow-auto scroll-smooth h-[350px] rounded-md bg-white">
           <div
             class="flex px-4 py-2 cursor-pointer gap-x-2 hover:bg-slate-600 hover:text-white"
             v-for="(result, index) in searchData"
@@ -72,7 +72,7 @@ export default {
           const params = new URLSearchParams({
             fuzzyMatch: true,
             lang: "en",
-            limit: 10,
+            limit: 20,
             proximity: props.coords.value
               ? `${props.coords.value.lang},${props.coords.value.lat}`
               : "0,0",
