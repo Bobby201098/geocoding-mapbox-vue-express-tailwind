@@ -66,7 +66,7 @@ import LoadingSpinner from "./LoadingSpinner.vue";
 
 export default {
   props: ["coords", "fetchCoords"],
-  components: [LoadingSpinner],
+  components: { LoadingSpinner },
   setup(props) {
     const searchQueryUser = ref(null);
     const searchData = ref(null);
@@ -76,6 +76,9 @@ export default {
     const search = () => {
       // clearTimeOut
       clearTimeout(queryTimeout.value);
+
+      // reset searchData
+      searchData.value = null;
 
       queryTimeout.value = setTimeout(async () => {
         if (searchQueryUser.value !== "") {
