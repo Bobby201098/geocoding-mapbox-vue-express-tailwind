@@ -1,6 +1,10 @@
 <template>
+    <!-- Title -->
+    <div class="absolute z-[3] w-full gap-4 bg-slate-300 px-2 py-8 md:top-[3px] md:left-[60px] md:w-auto md:px-0 md:py-0 rounded-md">
+        <h1>Geocoding App by romijulianto</h1>
+    </div>
   <div
-    class="absolute z-[2] flex w-full gap-4 bg-transparent px-6 py-8 md:left-[60px] md:top-[40px] md:w-auto md:px-0 md:py-0"
+    class="absolute z-[2] flex w-full gap-4 bg-transparent px-6 py-8 md:left-[60px] md:top-[40px] md:w-auto md:px-0 md:py-0 mt-[-13px]"
   >
     <!-- Search -->
     <div class="w-[350px] md:min-w[350px] relative flex-1">
