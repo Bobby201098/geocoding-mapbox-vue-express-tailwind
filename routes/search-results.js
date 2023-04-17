@@ -27,7 +27,7 @@ router.get("/:query", async (req, res) => {
                     item.city = type.text;
                 }
                 if(type.id.includes("region")) {
-                    item.state = type.text
+                    item.state = type.text;
                 }
             })
         });
