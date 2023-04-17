@@ -1,4 +1,4 @@
-### Build & Deploy a Geocoding Map App With Vue 3, Express & Tailwind CSS
+### Build & Deploy a Geocoding Map App With Mapbox, Vue 3, Express & Tailwind CSS
 
 _Documentation by Romi Julianto_
 
