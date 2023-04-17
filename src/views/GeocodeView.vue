@@ -8,8 +8,10 @@
     <MapFeatures
       @getGeolocation="getGeolocation"
       @plotResult="plotResult"
+      @toggleSearchResults="toggleSearchResults"
       :coords="coords"
       :fetchCoords="fetchCoords"
+      :searchResults="searchResults"
     />
     <div id="map" class="z-[1] h-full"></div>
   </div>
@@ -45,6 +47,10 @@ export default {
         )
         .addTo(map);
 
+        map.on('movedend', () => {
+          closeSearchResults();
+        })
+
       // intialize geoLocation
       getGeolocation();
     });
@@ -56,6 +62,7 @@ export default {
     const geoError = ref(null);
     const geoErrorMsg = ref(null);
     const resultMarker = ref(null);
+    const searchResults = ref(null)
 
     // function getGeolocation
     const getGeolocation = () => {
@@ -145,7 +152,17 @@ export default {
         .addTo(map);
 
       // set map view to current location
-      map.setView([coords.coordinates[1], coords.coordinates[0]], 15);
+      map.setView([coords.coordinates[1], coords.coordinates[0]], 14);
+
+      closeSearchResults();
+    }
+
+    const toggleSearchResults = () => {
+      searchResults.value = !searchResults.value;
+    }
+
+    const closeSearchResults = () => {
+      searchResults.value = null;
     }
 
     return {
@@ -157,6 +174,9 @@ export default {
       fetchCoords,
       geoErrorMsg,
       plotResult,
+      searchResults,
+      toggleSearchResults,
+      closeSearchResults,
     };
   },
 };
