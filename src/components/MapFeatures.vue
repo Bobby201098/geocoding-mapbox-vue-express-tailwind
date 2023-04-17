@@ -11,7 +11,7 @@
     <!-- Search -->
     <div class="md:min-w[350px] relative w-[350px] flex-1">
       <input
-        class="w-full py-3 pr-4 text-sm rounded-md shadow-md pl-9 focus:outline-none"
+        class="w-full rounded-md py-3 pl-9 pr-4 text-sm shadow-md focus:outline-none"
         type="text"
         placeholder="Search your address here"
         v-model="searchQueryUser"
@@ -24,7 +24,7 @@
       </div>
 
       <!-- Search Results -->
-      <div class="absolute w-full mt-2">
+      <div class="absolute mt-2 w-full">
         <!-- Results -->
         <div
           v-if="searchQueryUser && searchResults"
@@ -34,7 +34,7 @@
           <LoadingSpinner v-if="!searchData" />
           <div v-if="searchData">
             <div
-              class="flex px-4 py-2 cursor-pointer gap-x-2 hover:bg-slate-600 hover:text-white"
+              class="flex cursor-pointer gap-x-2 px-4 py-2 hover:bg-slate-600 hover:text-white"
               v-for="(result, index) in searchData"
               :key="index"
               @click="selectResultPoint(result)"
@@ -45,10 +45,16 @@
           </div>
         </div>
         <!-- Selected Search Results -->
-        <div v-if="selectedResults" class="px-4 py-3 mt-2 bg-white rounded-md">
-          <i @click="removeResults" class="flex justify-end far fa-times-circle"></i>
+        <div v-if="selectedResults" class="mt-2 rounded-md bg-white px-4 py-3">
+          <i
+            @click="removeResults"
+            class="far fa-times-circle flex justify-end"
+          ></i>
           <h1 class="text-lg">{{ selectedResults.text }}</h1>
-          <p class="mb-1 text-xs">{{  selectedResults.properties.address }}, {{ selectedResults.city }}, {{ selectedResults.state }}</p>
+          <p class="mb-1 text-xs">
+            {{ selectedResults.properties.address }},
+            {{ selectedResults.city }}, {{ selectedResults.state }}
+          </p>
           <p class="text-xs">{{ selectedResults.properties.category }}</p>
         </div>
       </div>
@@ -101,7 +107,7 @@ export default {
               : "0,0",
           });
           const getData = await axios.get(
-            `http://localhost:3200/api/search/${searchQueryUser.value}?${params}`
+            `https://kr760t-3200.csb.app/api/search/${searchQueryUser.value}?${params}`
           );
           searchData.value = getData.data.features;
           console.log(searchData.value);
@@ -111,15 +117,23 @@ export default {
 
     const selectResultPoint = (result) => {
       selectedResults.value = result;
-      emit('plotResult', result.geometry);
-    }
+      emit("plotResult", result.geometry);
+    };
 
     const removeResults = () => {
       selectedResults.value = null;
       emit("removeResults");
-    }
+    };
 
-    return { searchData, searchQueryUser, queryTimeout, search, selectResultPoint, selectedResults, removeResults };
+    return {
+      searchData,
+      searchQueryUser,
+      queryTimeout,
+      search,
+      selectResultPoint,
+      selectedResults,
+      removeResults,
+    };
   },
 };
 </script>
