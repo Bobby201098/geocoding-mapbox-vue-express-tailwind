@@ -44,6 +44,13 @@
             </div>
           </div>
         </div>
+        <!-- Selected Search Results -->
+        <div v-if="selectedResults" class="px-4 py-3 mt-2 bg-white rounded-md">
+          <i @click="removeResults" class="flex justify-end far fa-times-circle"></i>
+          <h1 class="text-lg">{{ selectedResults.text }}</h1>
+          <p class="mb-1 text-xs">{{  selectedResults.properties.address }}, {{ selectedResults.city }}, {{ selectedResults.state }}</p>
+          <p class="text-xs">{{ selectedResults.properties.category }}</p>
+        </div>
       </div>
     </div>
 
@@ -73,6 +80,7 @@ export default {
     const searchQueryUser = ref(null);
     const searchData = ref(null);
     const queryTimeout = ref(null);
+    const selectedResults = ref(null);
 
     // functioin searchfromUser
     const search = () => {
@@ -102,10 +110,16 @@ export default {
     };
 
     const selectResultPoint = (result) => {
+      selectedResults.value = result;
       emit('plotResult', result.geometry);
     }
 
-    return { searchData, searchQueryUser, queryTimeout, search, selectResultPoint };
+    const removeResults = () => {
+      selectedResults.value = null;
+      emit("removeResults");
+    }
+
+    return { searchData, searchQueryUser, queryTimeout, search, selectResultPoint, selectedResults, removeResults };
   },
 };
 </script>

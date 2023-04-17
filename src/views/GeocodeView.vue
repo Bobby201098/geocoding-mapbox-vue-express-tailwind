@@ -9,6 +9,7 @@
       @getGeolocation="getGeolocation"
       @plotResult="plotResult"
       @toggleSearchResults="toggleSearchResults"
+      @removeResults="removeResults"
       :coords="coords"
       :fetchCoords="fetchCoords"
       :searchResults="searchResults"
@@ -165,6 +166,10 @@ export default {
       searchResults.value = null;
     }
 
+    const removeResults = () => {
+      map.removeLayer(resultMarker.value)
+    }
+
     return {
       coords,
       geoMaker,
@@ -177,6 +182,7 @@ export default {
       searchResults,
       toggleSearchResults,
       closeSearchResults,
+      removeResults,
     };
   },
 };
