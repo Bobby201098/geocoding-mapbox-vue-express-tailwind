@@ -1,7 +1,7 @@
 <template>
   <!-- Title -->
   <div
-    class="absolute z-[3] w-full gap-4 rounded-md bg-slate-300 px-2 py-8 md:left-[60px] md:top-[3px] md:w-auto md:px-0 md:py-0"
+    class="absolute z-[2] w-full gap-4 rounded-md bg-slate-300 md:left-[60px] md:top-[3px] md:w-auto md:px-00 md:py-0"
   >
     <h1>Geocoding App by romijulianto</h1>
   </div>
@@ -11,7 +11,7 @@
     <!-- Search -->
     <div class="md:min-w[350px] relative w-[350px] flex-1">
       <input
-        class="w-full rounded-md py-3 pl-9 pr-4 text-sm shadow-md focus:outline-none"
+        class="w-full py-3 pr-4 text-sm rounded-md shadow-md pl-9 focus:outline-none"
         type="text"
         placeholder="Search your address here"
         v-model="searchQueryUser"
@@ -24,7 +24,7 @@
       </div>
 
       <!-- Search Results -->
-      <div class="absolute mt-2 w-full">
+      <div class="absolute w-full mt-2">
         <!-- Results -->
         <div
           v-if="searchQueryUser && searchResults"
@@ -34,7 +34,7 @@
           <LoadingSpinner v-if="!searchData" />
           <div v-if="searchData">
             <div
-              class="flex cursor-pointer gap-x-2 px-4 py-2 hover:bg-slate-600 hover:text-white"
+              class="flex px-4 py-2 cursor-pointer gap-x-2 hover:bg-slate-600 hover:text-white"
               v-for="(result, index) in searchData"
               :key="index"
               @click="selectResultPoint(result)"
@@ -45,10 +45,10 @@
           </div>
         </div>
         <!-- Selected Search Results -->
-        <div v-if="selectedResults" class="mt-2 rounded-md bg-white px-4 py-3">
+        <div v-if="selectedResults" class="px-4 py-3 mt-2 bg-white rounded-md">
           <i
             @click="removeResults"
-            class="far fa-times-circle flex justify-end"
+            class="flex justify-end far fa-times-circle"
           ></i>
           <h1 class="text-lg">{{ selectedResults.text }}</h1>
           <p class="mb-1 text-xs">
