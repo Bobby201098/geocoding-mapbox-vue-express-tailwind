@@ -1,10 +1,5 @@
 <template>
-  <!-- Title -->
-  <div
-    class="absolute z-[2] w-full gap-4 rounded-md bg-slate-300 md:left-[60px] md:top-[3px] md:w-auto md:px-00 md:py-0"
-  >
-    <h1>Geocoding App by romijulianto</h1>
-  </div>
+
   <div
     class="absolute z-[2] mt-[-13px] flex w-full gap-4 bg-transparent px-6 py-8 md:left-[60px] md:top-[40px] md:w-auto md:px-0 md:py-0"
   >
