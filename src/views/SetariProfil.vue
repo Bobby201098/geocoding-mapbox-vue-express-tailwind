@@ -75,7 +75,6 @@
                   <div>
                     <label for="username" class="block text-sm font-medium text-white">Username</label>
                     <div class="mt-1 flex rounded-md shadow-sm">
-                      <span class="inline-flex items-center rounded-l-md border border-r-0 border-gray-300 bg-gray-50 px-3 text-gray-400 sm:text-sm">thenftist.com/</span>
                       <input type="text" name="username" id="username" autocomplete="username" class="block w-full min-w-0 flex-grow rounded-none rounded-r-md border-gray-300 focus:border-sky-500 focus:ring-sky-500 sm:text-sm text-black"  />
                     </div>
                   </div>
