@@ -9,8 +9,10 @@ const app = createApp(App);
 
 app.use(
     createAuth0({
-      domain: "dev-4xqpl6n4zujaeapv.us.auth0.com",
-      clientId: "9UneVDtCME6dTYhXzXenmPikB6Um2PrR",
+      domain: "animus-platformma.eu.auth0.com",
+      clientId: "rmTo31MtD9om7YjgaTzjHD15k4blsTAr",
+      useRefreshTokens: true,
+      cacheLocation: 'localstorage',
       authorizationParams: {
         redirect_uri: window.location.origin
       }

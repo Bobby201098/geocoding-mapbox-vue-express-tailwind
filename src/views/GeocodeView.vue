@@ -1,25 +1,5 @@
 <template>
-  <Navbar class="!bg-slate-300">
-      <template #logo>
-        <NavbarLogo link="" alt="animus logo" image-url="https://w7.pngwing.com/pngs/854/555/png-transparent-vue-js-hd-logo-thumbnail.png">
-          ANIMUS
-        </NavbarLogo>
-      </template>
-      <template #default="{isShowMenu}" v-if="isAuthenticated">
-        <NavbarCollapse :isShowMenu="isShowMenu">
-          <NavbarLink isActive link="/">Panou Principal</NavbarLink>
-          <NavbarLink link="/tabel">Tabel Judete</NavbarLink>
-          <NavbarLink link="/membri">Membri</NavbarLink>
-          <NavbarLink link="/setariProfil">Setari</NavbarLink>
-        </NavbarCollapse>
-      </template>
-      <template #right-side>
-       <p v-if="isAuthenticated">Hello: {{ user?.name || user?.email }}</p>
-       <p class="px-4" v-if="!isAuthenticated">Va rog sa va logati ca sa accesati platforma</p>
-       <LoginBtn v-if="!isAuthenticated"/>
-        <!--<button type="button"  @click="logout" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-3 md:mr-0 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Log out</button>-->
-      </template>
-    </Navbar>
+ <nav-bar></nav-bar>
     <section class="bg-white dark:bg-gray-900" v-if="!isAuthenticated">
     <div class="grid max-w-screen-xl px-4 py-8 mx-auto lg:gap-8 xl:gap-0 lg:py-16 lg:grid-cols-12">
         <div class="mr-auto place-self-center lg:col-span-7">
@@ -46,15 +26,56 @@
             </tr>
         </thead>
         <tbody>
-            <tr v-for="oras in orase.slice(0,10)" :key="oras.id" class="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
-                <th scope="row" class="px-6 py-4 font-medium text-gray-900 hover:text-white hover:bg-blue-500 whitespace-nowrap dark:text-white">
-                  {{ oras.nume }}
+            <tr v-for="oras in selectedCity.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)" :key="oras.id" class="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
+                <th @click="showModal(oras.id)" scope="row" class="px-6 py-4 font-medium text-gray-900 hover:text-white hover:bg-blue-500 whitespace-nowrap dark:text-white">
+                  {{ oras.nume }} - {{ oras.populatie.toLocaleString('en-US') }}
                 </th>
+                <fwb-modal v-if="isShowModal" @close="closeModal">
+    <template #header>
+      <div class="flex items-center text-lg">
+    <b> {{ selectedOras.nume }} </b>
+      </div>
+    </template>
+    <template #body>
+      <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+      <b> Despre {{ selectedOras.nume }}</b>
+      </p>
+         <ul class="gap-4">
+          <li>Judet: <b>{{ selectedOras.judet }}</b></li>
+          <li>Cod postal: <b>{{ selectedOras.zip }}</b></li>
+          <li>Populatie: <b>{{ selectedOras.populatie.toLocaleString('en-US') }}</b></li>
+          <li>Placuta auto: <b>{{ selectedOras.auto }}</b></li>
+          <li>Filiale: </li>
+          <li>Membri: </li>
+         </ul>
+
+         <MapboxMap
+    style="height:400px"
+    access-token="pk.eyJ1IjoiYm9iYnkyMCIsImEiOiJjbGk1bjBqMDAwanh2M2VrYmNvNXBwaTdhIn0.6cPGUCvNzQvylhbQeRw_lQ"
+    map-style="mapbox://styles/mapbox/streets-v11"
+    :center="[selectedOras.lng, selectedOras.lat]"
+    :zoom="10" >
+    <MapboxMarker :lng-lat="[selectedOras.lng, selectedOras.lat]" />
+    </MapboxMap>
+    </template>
+    <template #footer>
+      <div class="flex justify-between">
+        <fwb-button @click="closeModal" color="alternative">
+          Inchide
+        </fwb-button>
+      </div>
+    </template>
+  </fwb-modal>
             </tr>
 
      
         </tbody>
     </table>
+    <div class="content-center items-center text-center space-x-10">
+    <button class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" @click="changePage(currentPage - 1)" :disabled="currentPage === 1">Previous</button>
+    <span class="content-center">Page {{ currentPage }}</span>
+    <button class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" @click="changePage(currentPage + 1)" :disabled="currentPage * rowsPerPage >= selectedCity?.length">Next</button>
+  </div>
     </div>
     </div>
     <div class="middle">
@@ -71,7 +92,7 @@
     </li>
 
 </ul>
-<romania-map v-if="map"/>
+<romania-map v-if="map" @path-selected="onPathSelected"/>
 <MoldovaMap v-if="!map"/>
 </div>
 <div class="right">
@@ -98,22 +119,30 @@
 </div>
 </div>
 </div>
-  
+
+
 </template>
 
 <script setup>
-import { Navbar, NavbarLogo, NavbarCollapse, NavbarLink} from 'flowbite-vue';
+// import { Navbar, NavbarLogo, NavbarCollapse, NavbarLink} from 'flowbite-vue';
 import RomaniaMap from '@/components/romaniaMap.vue';
 import MoldovaMap from '@/components/moldovaMap.vue';
 import { ref } from 'vue';
 import json from '../assets/localitati.json';
 import { useAuth0 } from '@auth0/auth0-vue';
-import LoginBtn from '@/components/LoginBtn.vue';
+// import LoginBtn from '@/components/LoginBtn.vue';
+import { FwbButton, FwbModal } from 'flowbite-vue'
+import NavBar from '@/components/NavBar.vue';
+import { MapboxMap, MapboxMarker } from '@studiometa/vue-mapbox-gl';
 
-const {user, isAuthenticated}  = useAuth0();
+const {isAuthenticated}  = useAuth0();
+
 
 const map = ref(true)
 const orase = ref(json)
+const selectedCity = ref([]);
+const selectedOras = ref(null);
+// const selectedPathTitle = ref(null);
 /*async function getCities(){ 
  const response = await fetch('https://roloca.coldfuse.io/orase');
  const jsonData = await response.json();
@@ -122,8 +151,27 @@ console.log(orase.value)
 }
 
 getCities();   */
+const isShowModal = ref(false)
 
-
+function closeModal () {
+  isShowModal.value = false
+}
+function showModal (id) {
+  selectedOras.value = selectedCity.value.find(oras => oras.id === id)
+  isShowModal.value = true
+}
+const currentPage = ref(1);
+const rowsPerPage = ref(10);
+const onPathSelected = (title) => {
+  // Handle the path-selected event
+  console.log('From parent',title);
+  const cities = orase.value.filter(city => city.judet === title);
+  selectedCity.value = cities;
+  console.log('Sat', selectedCity.value);
+};
+const changePage = (page) => {
+  currentPage.value = page;
+};
 </script>
 
 <style scoped>

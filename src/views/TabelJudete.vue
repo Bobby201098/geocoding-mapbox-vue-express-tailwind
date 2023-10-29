@@ -1,25 +1,66 @@
 <template>
- <Navbar class="!bg-slate-300">
-      <template #logo>
-        <NavbarLogo link="https://www.google.com/" alt="Flowbite logo" image-url="https://w7.pngwing.com/pngs/854/555/png-transparent-vue-js-hd-logo-thumbnail.png">
-        </NavbarLogo>
-      </template>
-      <template #default="{isShowMenu}">
-        <NavbarCollapse :isShowMenu="isShowMenu">
-          <NavbarLink isActive link="/">Panou Principal</NavbarLink>
-          <NavbarLink link="/tabel">Tabel Judete</NavbarLink>
-          <NavbarLink link="/membri">Membri</NavbarLink>
-          <NavbarLink link="/setariProfil">Setari</NavbarLink>
-        </NavbarCollapse>
-      </template>
-      <template #right-side>
-        <p v-if="isAuthenticated">Hello: {{ user?.name || user?.email }}</p>
-       <p class="px-4" v-if="!isAuthenticated">Va rog sa va logati ca sa accesati platforma</p>
-       <LoginBtn v-if="!isAuthenticated"/>
-      </template>
-    </Navbar>
+<nav-bar></nav-bar>
     <div class="relative p-4">
-  
+        <fwb-button @click="showModal">
+    Adauga filiala
+  </fwb-button>
+  <fwb-modal v-if="isShowModal" @close="closeModal">
+    <template #header>
+      <div class="flex items-center text-lg">
+        Adauga filiala
+      </div>
+    </template>
+    <template #body>
+      <fwb-table>
+        <fwb-table-body>
+          <fwb-table-row>
+            <fwb-table-head>
+      <label class="align-center text-center">Nume filiala</label>
+      </fwb-table-head>
+      <fwb-table-cell>
+      <input type="text" v-model="inviteeEmail" />
+    </fwb-table-cell>
+    </fwb-table-row>
+    <fwb-table-row>
+      <fwb-table-head>
+      <label>Adresa</label>
+    </fwb-table-head>
+      <fwb-table-cell>
+      <input type="text" v-model="phoneNumber" />
+      </fwb-table-cell>
+      </fwb-table-row>
+      <fwb-table-row>
+      <fwb-table-head>
+      <label>Oras</label>
+    </fwb-table-head>
+      <fwb-table-cell>
+      <textarea v-model="textMesaj">
+        </textarea>
+      </fwb-table-cell>
+      </fwb-table-row>
+      <fwb-table-row>
+      <fwb-table-head>
+      <label>Judet</label>
+    </fwb-table-head>
+      <fwb-table-cell>
+      <textarea v-model="textMesaj">
+        </textarea>
+      </fwb-table-cell>
+      </fwb-table-row>
+    </fwb-table-body>
+    </fwb-table>
+    </template>
+    <template #footer>
+      <div class="flex justify-between">
+        <fwb-button @click="closeModal" color="alternative">
+         Anuleaza
+        </fwb-button>
+        <fwb-button @click="closeModal" color="green">
+          Creeaza
+        </fwb-button>
+      </div>
+    </template>
+  </fwb-modal>
   <form class="flex items-center">   
     <label for="simple-search" class="sr-only">Search</label>
     <div class="relative w-full">
@@ -28,6 +69,7 @@
         </div>
         <input type="text" id="simple-search" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search" required>
     </div>
+ 
     <button type="submit" class="p-2.5 ml-2 text-sm font-medium text-white bg-blue-700 rounded-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
         <span class="sr-only">Search</span>
@@ -72,15 +114,22 @@
 
 </template>
 <script setup>
-import { Navbar, NavbarLogo, NavbarCollapse, NavbarLink} from 'flowbite-vue';
+import NavBar from '@/components/NavBar.vue';
 import { ref } from 'vue';
-import { useAuth0 } from '@auth0/auth0-vue';
-import LoginBtn from '@/components/LoginBtn.vue';
+// import { useAuth0 } from '@auth0/auth0-vue';
+import { FwbButton, FwbTable,FwbTableHead,FwbTableBody,FwbTableCell,FwbTableRow, FwbModal } from 'flowbite-vue';
 
-const {user, isAuthenticated}  = useAuth0();
+// const { isAuthenticated}  = useAuth0();
 
 const judete = ref(null);
+const isShowModal = ref(false)
 
+function closeModal () {
+  isShowModal.value = false
+}
+function showModal () {
+  isShowModal.value = true
+}
 async function getJudete(){
   const response = await fetch('https://roloca.coldfuse.io/judete');
   const jsonData = await response.json();
